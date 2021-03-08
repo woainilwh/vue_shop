@@ -31,8 +31,8 @@ export default {
     return{
       // 这是登录表单的数据绑定对象
       loginForm: {
-        username: 'zs',
-        password: '123'
+        username: 'admin',
+        password: '123456'
       },
       // 这是表单验证的规则
       loginFormRules: {
@@ -55,11 +55,20 @@ export default {
       this.$refs.loginFormRef.resetFields();
     },
     login(){
+      // console.log(this); 这里的this 指向的是vuecomponent refs是一个对象 loginformref是refs的对象
       this.$refs.loginFormRef.validate(async valid =>{
         if(!valid) return;
+        // 使用解构赋值
         const {data:res} =await this.$http.post("login",this.loginForm);
-        if(res.meta.status !== 200) return console.log("登陆失败");
-        console.log("登录成功");
+        // 判断是否收到状态码为200的成功信息 取反后 弹出登录失败
+        if(res.meta.status !== 200) return this.$message.error('登陆失败！')
+        // 否则弹出登录成功
+        this.$message.success("登录成功！")
+        //登录成功后会返回token  token是一个登录凭证 需要保存在客户端的sessionstorage中
+        // 登录之后才可以访问别的页面
+        window.sessionStorage.setItem('token',res.data.token)
+        // 通过编程式导航跳转到后台主页,路由地址是/home
+        this.$router.push("/home");
       })
     }
   }
