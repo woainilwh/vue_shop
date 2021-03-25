@@ -46,7 +46,7 @@
               type="success"
               icon="el-icon-location"
               size="mini"
-              @click="showProgressBox"
+              
             ></el-button>
           </template>
         </el-table-column>
